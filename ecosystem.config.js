@@ -1,9 +1,9 @@
 module.exports = {
-  apps : [{
+  apps: [{
+    name: 'ghDeploy-dev',
     script: 'index.js',
     watch: '.',
-    env: "production",
-  }],
+  }]
 
   // deploy : {
   //   production : {
