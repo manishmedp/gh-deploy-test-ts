@@ -29,21 +29,26 @@ jobs:
     - name: Run build task
       run: yarn build 
     - name: Deploy to Server
-      uses: easingthemes/ssh-deploy@v2.2.11
-      env:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: "-rltgoDzvO --delete"
-          SOURCE: "build/"
-          REMOTE_HOST: $AWS_HOST
-          REMOTE_USER: ec2-user
-          TARGET: "~/ghDeploy/"
-          EXCLUDE: "/build/"
-          RUN: cd ~/ghDeploy && npm install && pm2 start index.js
-    - name: Run code on server
+      ##uses: easingthemes/ssh-deploy@v2.2.11
+      #env:
+        #  SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+         # ARGS: "-rltgoDzvO --delete"
+        #  SOURCE: "build/"
+        #  REMOTE_HOST: $AWS_HOST
+        #  REMOTE_USER: ec2-user
+         # TARGET: "~/ghDeploy/"
+         # EXCLUDE: "/build/"
+        #  RUN: cd ~/ghDeploy && npm install && pm2 start index.js
+    
       # env:  
       #     SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
       # run: echo $SERVER_SSH_KEY $AWS_HOST $DEPLOY_FOLDER
-      run: |
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: $AWS_HOST
+        username: ec2-user
+        script: whoami
             echo $SERVER_SSH_KEY >> ssh_private_key.pem
             chmod 400 ssh_private_key.pem
             ssh -i ssh_private_key.pem ec2-user@$AWS_HOST
