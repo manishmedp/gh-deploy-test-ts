@@ -32,7 +32,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
           ARGS: "-rltgoDzvO --delete"
           SOURCE: "build/"
-          REMOTE_HOST: 3.110.188.180
+          REMOTE_HOST: 13.233.156.35
           REMOTE_USER: ec2-user
           TARGET: "~/ghDeploy/"
           EXCLUDE: "/build/"
