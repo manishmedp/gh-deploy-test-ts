@@ -29,16 +29,16 @@ jobs:
     - name: Run build task
       run: yarn build 
     - name: Deploy to Server
-      ##uses: easingthemes/ssh-deploy@v2.2.11
-      #env:
-        #  SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-         # ARGS: "-rltgoDzvO --delete"
-        #  SOURCE: "build/"
-        #  REMOTE_HOST: $AWS_HOST
-        #  REMOTE_USER: ec2-user
-         # TARGET: "~/ghDeploy/"
-         # EXCLUDE: "/build/"
-        #  RUN: cd ~/ghDeploy && npm install && pm2 start index.js
+      uses: easingthemes/ssh-deploy@v2.2.11
+      env:
+         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+         ARGS: "-rltgoDzvO --delete"
+         SOURCE: "build/"
+         REMOTE_HOST: $AWS_HOST
+         REMOTE_USER: ec2-user
+         TARGET: "~/ghDeploy/"
+         EXCLUDE: "/build/"
+         RUN: cd ~/ghDeploy && npm install && pm2 start index.js
     
       # env:  
       #     SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
@@ -48,8 +48,9 @@ jobs:
       with:
         host: $AWS_HOST
         username: ec2-user
-        script: whoami
-            echo $SERVER_SSH_KEY >> ssh_private_key.pem
-            chmod 400 ssh_private_key.pem
-            ssh -i ssh_private_key.pem ec2-user@$AWS_HOST
-            cd ~/ghDeploy && npm i && pm2 del ghDeploy-dev && pm2 start ghDeploy-dev && exit
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: sh deploy.sh
+            # echo $SERVER_SSH_KEY >> ssh_private_key.pem
+            # chmod 400 ssh_private_key.pem
+            # ssh -i ssh_private_key.pem ec2-user@$AWS_HOST
+            # cd ~/ghDeploy && npm i && pm2 del ghDeploy-dev && pm2 start ghDeploy-dev && exit
