@@ -14,7 +14,8 @@
   },
   "scripts": {
     "build": "tsc && cp -r package.json ./build/package.json",
-    "start": "node ./build/index.js"
+    "dev": "node ./build/index.js",
+    "start": "node index.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
