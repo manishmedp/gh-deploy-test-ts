@@ -16,6 +16,7 @@ jobs:
     env: 
       AWS_HOST: 13.233.156.35
       DEPLOY_FOLDER: ghDeploy
+      SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
 
     steps:
     - uses: actions/checkout@v3
@@ -23,24 +24,25 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '16.x'
-    - name: Install npm dependencies
-      run: yarn
-    - name: Run build task
-      run: yarn build 
-    - name: Deploy to Server
-      uses: easingthemes/ssh-deploy@v2.2.11
-      env:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: "-rltgoDzvO --delete"
-          SOURCE: "build/"
-          REMOTE_HOST: $AWS_HOST
-          REMOTE_USER: ec2-user
-          TARGET: "~/ghDeploy/"
-          EXCLUDE: "/build/"
-          RUN: cd ~/ghDeploy && npm install && pm2 start index.js
+    # - name: Install npm dependencies
+    #   run: yarn
+    # - name: Run build task
+    #   run: yarn build 
+    # - name: Deploy to Server
+    #   uses: easingthemes/ssh-deploy@v2.2.11
+    #   env:
+    #       SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+    #       ARGS: "-rltgoDzvO --delete"
+    #       SOURCE: "build/"
+    #       REMOTE_HOST: $AWS_HOST
+    #       REMOTE_USER: ec2-user
+    #       TARGET: "~/ghDeploy/"
+    #       EXCLUDE: "/build/"
+    #       RUN: cd ~/ghDeploy && npm install && pm2 start index.js
     - name: Run code on server
-      env:  
-          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
-      run: |
-            ssh -i $SERVER_SSH_KEY ec2-user@$AWS_HOST
-            cd ~/ghDeploy && npm i && pm2 del ghDeploy-dev && pm2 start ghDeploy-dev && exit
+      # env:  
+      #     SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+      run: echo $SERVER_SSH_KEY $AWS_HOST $DEPLOY_FOLDER
+      # run: |
+      #       ssh -i $SERVER_SSH_KEY ec2-user@$AWS_HOST
+      #       cd ~/ghDeploy && npm i && pm2 del ghDeploy-dev && pm2 start ghDeploy-dev && exit
