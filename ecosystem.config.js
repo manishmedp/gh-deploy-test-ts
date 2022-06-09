@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-    script: './build/index.js',
+    script: 'index.js',
     watch: '.',
     env: "production",
   }],
