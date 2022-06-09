@@ -36,4 +36,6 @@ jobs:
           REMOTE_USER: ec2-user
           TARGET: "~/ghDeploy/"
           EXCLUDE: "/build/"
-          RUN: cd ~/backend && npm install
+          RUN: cd ~/ghDeploy && npm install && pm2 start index.js
+    # - name: Run code on server
+    #   run: 
