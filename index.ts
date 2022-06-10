@@ -3,7 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 
 const server = express();
-const PORT = process.env.PORT || 9999;
+const PORT = process.env.PORT || 3000;
 
 server.use(express.urlencoded({ extended: true }));
 server.use(cors({ origin: "*" }));

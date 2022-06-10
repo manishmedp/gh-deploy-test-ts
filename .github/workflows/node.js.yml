@@ -5,35 +5,53 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main", "test" ]
+    branches: ["main", "test"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    env: 
-      AWS_HOST: 3.110.188.180
+    env:
+      AWS_HOST: 13.233.156.35
+      USER: ec2-user
+      DEPLOY_FOLDER: ghDeploy
+      SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Install Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16.x'
-    - name: Install npm dependencies
-      run: yarn
-    - name: Run build task
-      run: yarn build 
-    - name: Deploy to Server
-      uses: easingthemes/ssh-deploy@v2.2.11
-      env:
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+      - name: Install npm dependencies
+        run: yarn
+      - name: Run build task
+        run: yarn build
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2.2.11
+        env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
           ARGS: "-rltgoDzvO --delete"
           SOURCE: "build/"
-          REMOTE_HOST: 3.110.188.180
+          REMOTE_HOST: 13.233.156.35
           REMOTE_USER: ec2-user
           TARGET: "~/ghDeploy/"
           EXCLUDE: "/build/"
-          RUN: cd ~/backend && npm install
+          RUN: cd ~/ghDeploy && npm install && pm2 start index.js
+
+        # env:
+        #     SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        # run: echo $SERVER_SSH_KEY $AWS_HOST $DEPLOY_FOLDER
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: 13.233.156.35
+          username: ec2-user
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script:
+            sh ~/ghDeploy/deploy.sh
+            # echo $SERVER_SSH_KEY >> ssh_private_key.pem
+            # chmod 400 ssh_private_key.pem
+            # ssh -i ssh_private_key.pem ec2-user@$AWS_HOST
+            # cd ~/ghDeploy && npm i && pm2 del ghDeploy-dev && pm2 start ghDeploy-dev && exit
