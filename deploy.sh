@@ -7,5 +7,13 @@ set -eu
 # ssh -i ssh_private_key.pem ec2-user@$AWS_HOST
 cd ~/ghDeploy 
 npm i
-pm2 del ghDeploy-dev
-pm2 start ghDeploy-dev
+
+if pm2 ls | grep ghDeploy-dev 
+then
+    pm2 del ghDeploy-dev
+    cd ~/ghDeploy
+    pm2 start
+elif
+    cd ~/ghDeploy
+    pm2 start
+fi
