@@ -13,7 +13,7 @@
     "typescript": "^4.7.3"
   },
   "scripts": {
-    "build": "tsc && cp -r package.json ./build/package.json && cp -r ./ecosystem.config.js ./build/ecosystem.config.js && cp -r ./deploy.sh ./build/deploy.sh",
+    "build": "tsc && node before_compile.js",
     "dev": "node ./build/index.js",
     "start": "node index.js"
   },
