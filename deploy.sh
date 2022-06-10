@@ -13,7 +13,7 @@ then
     pm2 del ghDeploy-dev
     cd ~/ghDeploy
     pm2 start
-elif
+else
     cd ~/ghDeploy
     pm2 start
 fi
